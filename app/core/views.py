@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 
+
 class ActorView(APIView):
     serializer_class = ActorSerializer
     permission_classes = [AllowAny]
@@ -64,7 +65,7 @@ class MovieView(APIView):
             serializer = MovieSerializer(movie)
             return Response(serializer.data,status=status.HTTP_200_OK)
         movie = Movie.objects.all()  
-        serializer = ActorSerializer(movie,many=True)
+        serializer = MovieSerializer(movie,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     def post(self,request):
@@ -93,7 +94,7 @@ class MovieView(APIView):
         movie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)    
     
-    
+
 class TheatreView(APIView):
     serializer_class = TheatreSerializer
     permission_classes = [AllowAny]
@@ -108,7 +109,7 @@ class TheatreView(APIView):
             serializer = TheatreSerializer(theatre)
             return Response(serializer.data,status=status.HTTP_200_OK)
         theatre = Theatre.objects.all()  
-        serializer = ActorSerializer(theatre,many=True)
+        serializer = TheatreSerializer(theatre,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     def post(self,request):
