@@ -22,6 +22,11 @@ class MovieShedulesSerializer(serializers.ModelSerializer):
         model = Movie_shedules
         fields = '__all__' 
 
+class SeatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seats
+        fields = '__all__'        
+
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket

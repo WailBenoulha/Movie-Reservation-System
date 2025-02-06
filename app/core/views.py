@@ -71,4 +71,36 @@ class TheatreView(APIView):
         theatre.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)  
 
+class MovieSheduleView(APIView):
+    queryset = Movie_shedules.objects.all()
+    serializer_class = MovieShedulesSerializer
+    permission_classes = [AllowAny]
 
+    def get(self,request):
+        model = Movie_shedules.objects.all()
+        serializer = MovieShedulesSerializer(model,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    def post(self,request):
+        serializer = MovieShedulesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+from rest_framework.decorators import api_view,permission_classes
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_seats(request,pk=None):
+    if pk:
+        try:
+            model = Seats.objects.get(pk=pk)
+            serializer = SeatsSerializer(model)
+        except Movie_shedules.DoesNotExist:
+            return Response({'error':'Seat not found'},status=status.HTTP_404_NOT_FOUND)
+            
+    model = Seats.objects.all()
+    serializer = SeatsSerializer(model,many=True)
+    return Response(serializer.data,status=status.HTTP_200_OK)
