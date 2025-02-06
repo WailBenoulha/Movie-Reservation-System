@@ -78,7 +78,7 @@ class Ticket(models.Model):
     ticket_number = models.IntegerField(editable=False)
 
     def save(self,*args,**kwargs):
-        seat = Seats.objects.get(movie_time_infos=self.movie_schedule)
+        seat = Seats.objects.get(movie_time_infos=self.movie_shedule)
         
         if self.seat_type == "vip":
             Seats.objects.filter(movie_time_infos=self.movie_shedule).update(
@@ -87,12 +87,12 @@ class Ticket(models.Model):
             disponible_seats = seat.number_vip_seats
             total_seats = seat.fix_vip_seats
         elif self.seat_type == "normal":
-            Seats.objects.filter(movie_schedule=self.movie_schedule).update(
+            Seats.objects.filter(movie_schedule=self.movie_shedule).update(
                 number_normal_seats=F('number_normal_seats') - 1
             )
             disponible_seats = seat.number_normal_seats
             total_seats = seat.fix_normal_seats
-            
+
         self.ticket_number = total_seats - disponible_seats    
         super().save(*args,**kwargs)    
 

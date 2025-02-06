@@ -104,3 +104,9 @@ def get_seats(request,pk=None):
     model = Seats.objects.all()
     serializer = SeatsSerializer(model,many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
+
+from rest_framework.generics import CreateAPIView
+class TicketView(CreateAPIView):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    permission_classes = [AllowAny]

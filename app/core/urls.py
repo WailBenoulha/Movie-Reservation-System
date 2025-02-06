@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (ActorListView,ActorDetailView,
                     MovieListView,MovieDetailView,
                     TheatreView,MovieSheduleView,
-                    get_seats)
+                    get_seats,TicketView)
 
 urlpatterns = [
     path('actors',ActorListView.as_view(),name='actors'),
@@ -14,4 +14,5 @@ urlpatterns = [
     path('shedules',MovieSheduleView.as_view(),name='shedules'),
     path('seats',get_seats,name='seats'),
     path('seats/<int:pk>/',get_seats,name='seats'),
+    path('reserve',TicketView.as_view(),name='reserve_ticket')
 ]
