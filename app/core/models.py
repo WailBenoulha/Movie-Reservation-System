@@ -1,6 +1,31 @@
 from django.db import models
 from django.db.models import F
 
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+
+from .managers import CustomUserManager
+
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_("email address"), unique=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['first_name','last_name']
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email  
+
+
 class Actors(models.Model):
     name = models.CharField(max_length=255)    
 
@@ -74,7 +99,7 @@ class Ticket(models.Model):
     ]
     movie_shedule = models.ForeignKey(Movie_shedules,on_delete=models.CASCADE)
     seat_type = models.CharField(max_length=255,choices=SEAT_TYPE)
-    username = models.CharField(max_length=255)
+    username = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     ticket_number = models.IntegerField(editable=False)
 
     def save(self,*args,**kwargs):
@@ -87,7 +112,7 @@ class Ticket(models.Model):
             disponible_seats = seat.number_vip_seats
             total_seats = seat.fix_vip_seats
         elif self.seat_type == "normal":
-            Seats.objects.filter(movie_schedule=self.movie_shedule).update(
+            Seats.objects.filter(movie_time_infos=self.movie_shedule).update(
                 number_normal_seats=F('number_normal_seats') - 1
             )
             disponible_seats = seat.number_normal_seats
@@ -98,3 +123,5 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"Ticket for {self.username} ({self.seat_type} seat) - {self.movie_shedule.movie.name} at {self.movie_shedule.theatre.name}"
+    
+

@@ -30,4 +30,5 @@ class SeatsSerializer(serializers.ModelSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = '__all__'                            
+        fields = ['id','movie_shedule','seat_type']                         
+        read_only_fields = ['id']

@@ -5,7 +5,7 @@ from .serializers import *
 from .models import *
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated
 
 
 class ActorListView(ListCreateAPIView):
@@ -110,3 +110,18 @@ class TicketView(CreateAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     permission_classes = [AllowAny]
+
+from django.contrib.auth.models import Group,Permission  
+
+class TicketsView(APIView):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer    
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+        serializer = TicketSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(username=self.request.user)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+      
